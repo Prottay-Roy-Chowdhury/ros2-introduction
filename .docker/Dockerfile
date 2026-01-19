@@ -27,8 +27,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends\
     ros-$ROS_DISTRO-rqt-robot-dashboard \
     ros-$ROS_DISTRO-rqt-robot-steering \
     ros-$ROS_DISTRO-rqt-tf-tree \
-    ros-$ROS_DISTRO-rqt-tf-tree \
     ros-$ROS_DISTRO-turtlesim \
+    ros-$ROS_DISTRO-rviz2 \
+    libgl1-mesa-dri \
+    libgl1-mesa-glx \
+    mesa-utils \
     ros-$ROS_DISTRO-rmw-fastrtps-cpp \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
@@ -39,6 +42,23 @@ RUN mkdir -p dev_ws/src
 COPY . /dev_ws/src/
 
 WORKDIR /dev_ws
+
+# Clone rplidar_ros into the workspace
+RUN git clone -b ros2 https://github.com/Slamtec/rplidar_ros.git /dev_ws/src/rplidar_ros
+
+# Install ROS package dependencies (rosdep)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3-rosdep \
+    python3-colcon-common-extensions \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN rosdep init || true
+RUN rosdep update
+RUN ["/bin/bash", "-c", "source /opt/ros/$ROS_DISTRO/setup.bash && \
+    rosdep install --from-paths src --ignore-src -r -y"]
+
+# Build
 
 RUN ["/bin/bash", "-c", "source /opt/ros/$ROS_DISTRO/setup.bash && \
      colcon build --merge-install --symlink-install --cmake-args '-DCMAKE_BUILD_TYPE=Release'"]
