@@ -3,10 +3,10 @@ FROM ros:${ROS_DISTRO}-ros-base AS base
 
 ARG ROS_DISTRO
 
-ENV LANG C.UTF-8
-ENV LC_ALL C.UTF-8
-ENV DEBIAN_FRONTEND noninteractive
-ENV TERM xterm-256color
+ENV LANG=C.UTF-8 \
+    LC_ALL=C.UTF-8 \
+    DEBIAN_FRONTEND=noninteractive \
+    TERM=xterm-256color
 
 
 RUN apt-get update && apt-get install -y --no-install-recommends\
@@ -42,9 +42,6 @@ RUN mkdir -p dev_ws/src
 COPY . /dev_ws/src/
 
 WORKDIR /dev_ws
-
-# Clone rplidar_ros into the workspace
-RUN git clone -b ros2 https://github.com/Slamtec/rplidar_ros.git /dev_ws/src/rplidar_ros
 
 # Install ROS package dependencies (rosdep)
 RUN apt-get update && apt-get install -y --no-install-recommends \
