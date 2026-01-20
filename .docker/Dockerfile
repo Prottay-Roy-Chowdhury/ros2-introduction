@@ -36,10 +36,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends\
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 
-WORKDIR /
 RUN mkdir -p dev_ws/src
 
-COPY . /dev_ws/src/
+COPY . /dev_ws/src
 
 WORKDIR /dev_ws
 
