@@ -33,6 +33,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends\
     libgl1-mesa-glx \
     mesa-utils \
     ros-$ROS_DISTRO-rmw-fastrtps-cpp \
+    ros-$ROS_DISTRO-rmw-cyclonedds-cpp \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 
